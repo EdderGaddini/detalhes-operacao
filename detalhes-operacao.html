@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados da URL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            text-align: center;
+        }
+        .data-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Dados Recebidos</h2>
+        <div id="data-display"></div>
+    </div>
+
+    <script>
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return Object.fromEntries(params.entries());
+        }
+
+        function displayData() {
+            const data = getQueryParams();
+            const displayDiv = document.getElementById("data-display");
+            
+            if (Object.keys(data).length === 0) {
+                displayDiv.innerHTML = "<p>Nenhum dado encontrado na URL.</p>";
+                return;
+            }
+            
+            let content = "";
+            for (const [key, value] of Object.entries(data)) {
+                content += `<div class="data-item"><strong>${key}:</strong> ${decodeURIComponent(value)}</div>`;
+            }
+            displayDiv.innerHTML = content;
+        }
+
+        displayData();
+    </script>
+</body>
+</html>
