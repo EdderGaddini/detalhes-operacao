@@ -3,6 +3,7 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: #f2f2f2;
+    padding: 20px;
   }
   
   /* Container principal centralizado horizontalmente */
@@ -63,7 +64,7 @@ body {
   }
   
   .footer .logo img {
-    max-width: 200px;
+    max-width: 230px;
     height: auto;
   }
   
@@ -74,7 +75,7 @@ body {
   }
   
   .footer .social-buttons a img {
-    max-width: 40px;
+    max-width: 35px;
     height: auto;
     transition: transform 0.3s ease;
   }
@@ -86,7 +87,10 @@ body {
   /* Media Query para dispositivos móveis */
   @media (max-width: 600px) {
     .footer .social-buttons a img {
-      max-width: 30px;
+      max-width: 20px;
+    }
+    .footer .logo img {
+      max-width: 180px;
     }
   }
   
