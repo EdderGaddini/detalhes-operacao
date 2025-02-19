@@ -1,59 +1,94 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dados da URL</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-        h2 {
-            text-align: center;
-        }
-        .data-item {
-            margin-bottom: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Total Express / Romaneio Eletrônico</title>
+  <!-- Favicon: logo da página -->
+  <link rel="icon" href="icons/logo-site.png" type="image/png">
+  <!-- Link para o arquivo CSS externo -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Dados Recebidos</h2>
-        <div id="data-display"></div>
+  <div class="container">
+    <h1>Romaneio Eletrônico</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Parâmetro</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody id="paramTable">
+        <!-- As linhas serão inseridas via JavaScript -->
+      </tbody>
+    </table>
+
+    <!-- Footer integrado no card -->
+    <div class="footer">
+      <div class="logo">
+        <a href="https://www.totalexpress.com.br/" target="_blank">
+          <img src="icons/logo-total-express-slogan.svg" alt="Logo" class="logo-img">
+        </a>
+      </div>
+      <div class="social-buttons">
+        <!-- Botão para o site (LinkedIn, por exemplo) -->
+        <a href="https://www.linkedin.com/company/totalexpress/" target="_blank">
+          <img src="icons/linkedin.png" alt="Site">
+        </a>
+        <!-- Botão para o Instagram -->
+        <a href="https://www.instagram.com/totalexpressbrasil/" target="_blank">
+          <img src="icons/instagram.png" alt="Instagram">
+        </a>
+        <!-- Botão para o YouTube -->
+        <a href="https://www.youtube.com/channel/UCko_yFUb7Q1I87Ns4-UpH-A" target="_blank">
+          <img src="icons/youtube.png" alt="YouTube">
+        </a>
+        <!-- Botão para o WhatsApp -->
+        <a href="https://api.whatsapp.com/send?phone=551136275900&amp%3Btext=Envie%20uma%20mensagem" target="_blank">
+          <img src="icons/whatsapp.png" alt="WhatsApp">
+        </a>
+      </div>
     </div>
+  </div>
 
-    <script>
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            return Object.fromEntries(params.entries());
-        }
+  <script>
+    // Função para extrair os parâmetros da URL
+    function getUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      const entries = [];
+      for (const [key, value] of params.entries()) {
+        entries.push({ key, value });
+      }
+      return entries;
+    }
 
-        function displayData() {
-            const data = getQueryParams();
-            const displayDiv = document.getElementById("data-display");
-            
-            if (Object.keys(data).length === 0) {
-                displayDiv.innerHTML = "<p>Nenhum dado encontrado na URL.</p>";
-                return;
-            }
-            
-            let content = "";
-            for (const [key, value] of Object.entries(data)) {
-                content += `<div class="data-item"><strong>${key}:</strong> ${decodeURIComponent(value)}</div>`;
-            }
-            displayDiv.innerHTML = content;
-        }
+    // Função para renderizar os parâmetros na tabela
+    function renderTable() {
+      const params = getUrlParams();
+      const tbody = document.getElementById('paramTable');
 
-        displayData();
-    </script>
+      if (params.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" style="text-align: center;">Nenhum parâmetro encontrado.</td></tr>';
+      } else {
+        params.forEach(param => {
+          const row = document.createElement('tr');
+
+          const cellKey = document.createElement('td');
+          cellKey.textContent = param.key;
+
+          const cellValue = document.createElement('td');
+          cellValue.textContent = param.value;
+
+          row.appendChild(cellKey);
+          row.appendChild(cellValue);
+          tbody.appendChild(row);
+        });
+      }
+    }
+
+    // Renderiza a tabela ao carregar a página
+    renderTable();
+  </script>
 </body>
 </html>

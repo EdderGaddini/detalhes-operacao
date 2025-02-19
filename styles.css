@@ -1,0 +1,92 @@
+/* Reset básico e fonte */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+  }
+  
+  /* Container principal centralizado horizontalmente */
+  .container {
+    max-width: 800px;
+    width: 90%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: 50px auto;
+  }
+  
+  /* Título centralizado */
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  /* Estilização da tabela */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  th {
+    background: #E11E25;
+    color: #fff;
+  }
+  
+  tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+  
+  /* Footer interno ao card */
+  .footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  /* Logo do footer */
+  .footer .logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .footer .logo img {
+    max-width: 200px;
+    height: auto;
+  }
+  
+  /* Botões de imagem */
+  .footer .social-buttons {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .footer .social-buttons a img {
+    max-width: 40px;
+    height: auto;
+    transition: transform 0.3s ease;
+  }
+  
+  .footer .social-buttons a img:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Media Query para dispositivos móveis */
+  @media (max-width: 600px) {
+    .footer .social-buttons a img {
+      max-width: 30px;
+    }
+  }
+  
