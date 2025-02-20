@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
   <!-- Link para o arquivo CSS externo -->
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <div class="container">
     <h1>Romaneio Eletrônico</h1>
@@ -53,42 +55,78 @@
   </div>
 
   <script>
-    // Função para extrair os parâmetros da URL
-    function getUrlParams() {
+    // Função para extrair e decodificar o parâmetro "data"
+    function getDecodedData() {
       const params = new URLSearchParams(window.location.search);
-      const entries = [];
-      for (const [key, value] of params.entries()) {
-        entries.push({ key, value });
+
+      // Pega o valor do parâmetro "data"
+      const dataParam = params.get('data');
+      if (!dataParam) {
+        return null; // Se não existir 'data', retorna null
       }
-      return entries;
+
+      try {
+        // Decodifica em Base64 (versão URL-safe)
+        // 1) Precisamos transformar a base64Url de volta para base64 normal 
+        //    (onde '-' -> '+' e '_' -> '/')
+        let base64 = dataParam
+          .replace(/-/g, '+')
+          .replace(/_/g, '/');
+
+        // 2) Faz atob para decodificar base64 (Browser JS)
+        const jsonString = atob(base64);
+
+        // 3) Faz o parse da string JSON
+        const decodedObject = JSON.parse(jsonString);
+
+        return decodedObject;
+      } catch (e) {
+        console.error("Erro ao decodificar/parsing JSON:", e);
+        return null;
+      }
     }
 
-    // Função para renderizar os parâmetros na tabela
+    // Função para renderizar os dados na tabela
     function renderTable() {
-      const params = getUrlParams();
       const tbody = document.getElementById('paramTable');
 
-      if (params.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="2" style="text-align: center;">Nenhum parâmetro encontrado.</td></tr>';
-      } else {
-        params.forEach(param => {
-          const row = document.createElement('tr');
+      // Obtem o objeto decodificado
+      const dataObject = getDecodedData();
 
-          const cellKey = document.createElement('td');
-          cellKey.textContent = param.key;
-
-          const cellValue = document.createElement('td');
-          cellValue.textContent = param.value;
-
-          row.appendChild(cellKey);
-          row.appendChild(cellValue);
-          tbody.appendChild(row);
-        });
+      // Se não achar nada, mostrar mensagem
+      if (!dataObject) {
+        tbody.innerHTML = '<tr><td colspan="2" style="text-align: center;">Nenhum dado encontrado.</td></tr>';
+        return;
       }
+
+      // Monta as linhas com base nas chaves do objeto
+      const keys = Object.keys(dataObject);
+
+      // Se não houver chaves no objeto, mostra mensagem
+      if (keys.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" style="text-align: center;">Nenhum dado encontrado.</td></tr>';
+        return;
+      }
+
+      // Cria cada linha da tabela
+      keys.forEach(key => {
+        const row = document.createElement('tr');
+
+        const cellKey = document.createElement('td');
+        cellKey.textContent = key;
+
+        const cellValue = document.createElement('td');
+        cellValue.textContent = dataObject[key];
+
+        row.appendChild(cellKey);
+        row.appendChild(cellValue);
+        tbody.appendChild(row);
+      });
     }
 
-    // Renderiza a tabela ao carregar a página
+    // Chama a função de renderizar assim que a página carrega
     renderTable();
   </script>
 </body>
+
 </html>
