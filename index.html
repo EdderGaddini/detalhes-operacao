@@ -55,31 +55,46 @@
   </div>
 
   <script>
-    // Função para extrair e decodificar o parâmetro "data"
+    /**
+     * Decodifica string Base64URL em texto UTF-8.
+     * 1) Converte '-' -> '+', '_' -> '/'
+     * 2) Adiciona '=' até que o length seja múltiplo de 4
+     * 3) Usa atob() para decodificar em binário
+     * 4) Converte binário -> UTF-8 com TextDecoder
+     */
+    function decodeBase64UrlToUTF8(base64Url) {
+      let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+
+      // Ajustar padding se necessário (Base64 precisa ser múltiplo de 4)
+      while (base64.length % 4 !== 0) {
+        base64 += '=';
+      }
+
+      // Decodificar base64 para string binária
+      const binaryStr = atob(base64);
+
+      // Converter cada caractere em código (Uint8Array)
+      const bytes = new Uint8Array(binaryStr.length);
+      for (let i = 0; i < binaryStr.length; i++) {
+        bytes[i] = binaryStr.charCodeAt(i);
+      }
+
+      // Converter bytes para texto UTF-8
+      const decoder = new TextDecoder('utf-8');
+      return decoder.decode(bytes);
+    }
+
+    // Função que obtém e decodifica os dados do parâmetro "data"
     function getDecodedData() {
       const params = new URLSearchParams(window.location.search);
-
-      // Pega o valor do parâmetro "data"
       const dataParam = params.get('data');
       if (!dataParam) {
-        return null; // Se não existir 'data', retorna null
+        return null;
       }
 
       try {
-        // Decodifica em Base64 (versão URL-safe)
-        // 1) Precisamos transformar a base64Url de volta para base64 normal 
-        //    (onde '-' -> '+' e '_' -> '/')
-        let base64 = dataParam
-          .replace(/-/g, '+')
-          .replace(/_/g, '/');
-
-        // 2) Faz atob para decodificar base64 (Browser JS)
-        const jsonString = atob(base64);
-
-        // 3) Faz o parse da string JSON
-        const decodedObject = JSON.parse(jsonString);
-
-        return decodedObject;
+        const jsonString = decodeBase64UrlToUTF8(dataParam);
+        return JSON.parse(jsonString);
       } catch (e) {
         console.error("Erro ao decodificar/parsing JSON:", e);
         return null;
@@ -89,26 +104,19 @@
     // Função para renderizar os dados na tabela
     function renderTable() {
       const tbody = document.getElementById('paramTable');
-
-      // Obtem o objeto decodificado
       const dataObject = getDecodedData();
 
-      // Se não achar nada, mostrar mensagem
       if (!dataObject) {
         tbody.innerHTML = '<tr><td colspan="2" style="text-align: center;">Nenhum dado encontrado.</td></tr>';
         return;
       }
 
-      // Monta as linhas com base nas chaves do objeto
       const keys = Object.keys(dataObject);
-
-      // Se não houver chaves no objeto, mostra mensagem
       if (keys.length === 0) {
         tbody.innerHTML = '<tr><td colspan="2" style="text-align: center;">Nenhum dado encontrado.</td></tr>';
         return;
       }
 
-      // Cria cada linha da tabela
       keys.forEach(key => {
         const row = document.createElement('tr');
 
@@ -124,9 +132,8 @@
       });
     }
 
-    // Chama a função de renderizar assim que a página carrega
+    // Renderiza a tabela ao carregar a página
     renderTable();
   </script>
 </body>
-
 </html>
